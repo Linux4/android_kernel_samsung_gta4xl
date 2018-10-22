@@ -57,6 +57,9 @@
 #if defined(CONFIG_EXYNOS_DISPLAYPORT)
 #include "displayport.h"
 #endif
+#if defined(CONFIG_EXYNOS_DECON_DQE)
+#include "dqe.h"
+#endif
 
 int decon_log_level = 6;
 module_param(decon_log_level, int, 0644);
@@ -623,6 +626,10 @@ static int _decon_enable(struct decon_device *decon, enum decon_state state)
 	decon->state = state;
 	decon_reg_set_int(decon->id, &psr, 1);
 
+#if defined(CONFIG_EXYNOS_DECON_DQE)
+	decon_dqe_enable(decon);
+#endif
+
 err:
 	return ret;
 }
@@ -786,6 +793,10 @@ static int _decon_disable(struct decon_device *decon, enum decon_state state)
 		dsim = v4l2_get_subdevdata(decon->out_sd[0]);
 		call_panel_ops(dsim, suspend, dsim);
 	}
+
+#if defined(CONFIG_EXYNOS_DECON_DQE)
+	decon_dqe_disable(decon);
+#endif
 
 	ret = decon_reg_stop(decon->id, decon->dt.out_idx[0], &psr, true,
 			decon->lcd_info->fps);
@@ -4037,7 +4048,9 @@ static int decon_initial_display(struct decon_device *decon, bool is_colormap)
 decon_init_done:
 
 	decon->state = DECON_STATE_INIT;
-
+#if defined(CONFIG_EXYNOS_DECON_DQE)
+	decon_dqe_enable(decon);
+#endif
 	return 0;
 }
 
@@ -4159,6 +4172,10 @@ static int decon_probe(struct platform_device *pdev)
 
 #if defined(CONFIG_EXYNOS_READ_ESD_SOLUTION)
 	decon_set_bypass(decon, false);
+#endif
+
+#if defined(CONFIG_EXYNOS_DECON_DQE)
+	decon_dqe_create_interface(decon);
 #endif
 
 	ret = decon_initial_display(decon, false);
