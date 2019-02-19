@@ -1343,6 +1343,14 @@ err:
 	return ret;
 }
 
+void decon_dqe_sw_reset(struct decon_device *decon)
+{
+	if (decon->id)
+		return;
+
+	dqe_reg_hsc_sw_reset(decon->id);
+}
+
 void decon_dqe_enable(struct decon_device *decon)
 {
 	u32 val;
