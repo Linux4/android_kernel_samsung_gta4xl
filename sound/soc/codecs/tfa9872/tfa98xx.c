@@ -166,10 +166,10 @@ static struct tfa98xx_rate rate_to_fssel[] = {
 };
 
 /* Wrapper for tfa start */
-static enum tfa_error
+static enum tfa98xx_error
 tfa98xx_tfa_start(struct tfa98xx *tfa98xx, int next_profile, int *vstep)
 {
-	enum tfa_error err;
+	enum tfa98xx_error err;
 
 	err = tfa_start(next_profile, vstep);
 
