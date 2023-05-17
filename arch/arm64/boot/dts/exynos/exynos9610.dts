@@ -154,19 +154,8 @@
 		android {
 			compatible = "android,firmware";
 			shared_meta: vbmeta {
-				compatible = "android,vbmeta";
-				parts = "vbmeta,boot,system,vendor";
 			};
 			android_q_fstab: fstab {
-				compatible = "android,fstab";
-				vendor {
-					compatible = "android,vendor";
-					dev = "/dev/block/platform/13520000.ufs/by-name/vendor";
-					type = "ext4";
-					mnt_flags = "ro";
-					fsmgr_flags = "wait,verify,avb";
-					status = "disabled";
-				};
 			};
 		};
 	};
@@ -2326,6 +2315,7 @@
 		hotplug_in_threshold = <91>;
 		hotplug_out_threshold = <96>;
 		#include "exynos9610-tmu-sensor-conf.dtsi"
+		thermal_status_level = <80000 85000 90000>;
 	};
 
 	tmuctrl_1: LITTLE@10070000 {
